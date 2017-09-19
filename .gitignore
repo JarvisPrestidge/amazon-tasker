@@ -1,0 +1,17 @@
+# Dependency directories
+node_modules
+
+# Custom
+dist
+
+# Private secrets
+config
+
+# vs code config
+.vscode
+
+# any .task todo files
+**/*.tasks
+
+# .cache directories
+**/.cache

@@ -1,0 +1,15 @@
+{
+  "name": "amazon-tasker",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "author": "Jarvis Prestidge & Ryan Taylor",
+  "license": "MIT",
+  "dependencies": {
+  },
+  "scripts": {
+    "prepublishOnly": "npm run build",
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc -p .",
+    "start": "node dist/src/index.js"
+  }
+}
