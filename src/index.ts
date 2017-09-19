@@ -1,6 +1,9 @@
 import { writeFile } from "fs";
-import * as request from "request-promise-native";
-import config from "../config/config";
+import * as Koa from "koa";
+import * as Body from "koa-body";
+import * as Router from "koa-router";
+import * as Request from "request-promise-native";
+import Config from "../config/config";
 
 const REMOTE_DROPBOX_PATH = "/tasklist.csv";
 const LOCAL_CSV_FILE_PATH = "../../tasklist.csv";
@@ -21,7 +24,7 @@ const dropboxApiFileDownload = async (path: string): Promise<string> => {
 
     // Header params
     const headers = {
-        "Authorization": `Bearer ${config.accessToken}`,
+        "Authorization": `Bearer ${Config.accessToken}`,
         "Dropbox-API-Arg": args
     };
 
@@ -32,7 +35,7 @@ const dropboxApiFileDownload = async (path: string): Promise<string> => {
         simple: false,
     };
 
-    return await request(requestOpts);
+    return await Request(requestOpts);
 };
 
 /**
@@ -43,28 +46,39 @@ const dropboxApiFileDownload = async (path: string): Promise<string> => {
 const writeFileToDisk = (path: string, content: string): void => {
 
     return writeFile(path, content, (err) => {
+        console.log(path);
+        console.log(content);
         if (err) {
             // If error object exists throw legible error message
             throw new Error(`Failed to write file to disk with error code: ${err.code}`);
         }
         // Else log success
-        console.log('The file has been successfully saved!');
+        console.log("The file has been successfully saved!");
     });
 };
 
 /**
- * Entry point
+ * Update local copy of csv file with remote
  * 
  * @returns {Promise<void>} 
  */
-const main = async (): Promise<void> => {
-
+const updateCSV = async (): Promise<void> => {
     // Get file content from api
     const fileContent = await dropboxApiFileDownload(REMOTE_DROPBOX_PATH);
-
     // Write content to disk
     writeFileToDisk(LOCAL_CSV_FILE_PATH, fileContent)
 };
 
-main();
-
+(async () => {
+    // Create Koa instance
+    const app = new Koa();
+    const router = new Router()
+    router.get("/", async (ctx) => ctx.body = ctx.query.challenge);
+    router.post("/", async (ctx) => {
+        console.log("\nRecieved webhook notification - file updated on dropbox!\n")
+        console.log("\n" + JSON.stringify(ctx) + "\n")
+        await updateCSV();
+    });
+    app.use(router.routes());
+    app.listen(4000, () => console.log("\nServer started, listening on port 4000..."));
+})();

@@ -5,6 +5,11 @@
   "author": "Jarvis Prestidge & Ryan Taylor",
   "license": "MIT",
   "dependencies": {
+    "@types/koa": "^2.0.39",
+    "koa": "^2.3.0",
+    "koa-body": "^2.3.0",
+    "koa-router": "^7.2.1",
+    "localtunnel": "^1.8.3",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4"
   },
@@ -15,6 +20,7 @@
     "start": "node dist/src/index.js"
   },
   "devDependencies": {
+    "@types/koa-router": "^7.0.23",
     "@types/node": "^8.0.28",
     "@types/request": "^2.0.3",
     "@types/request-promise-native": "^1.0.6"
