@@ -14,4 +14,7 @@ config
 **/*.tasks
 
 # .cache directories
-**/.cache
+**/*.cache
+
+# CSV files
+**/*.csv

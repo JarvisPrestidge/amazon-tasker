@@ -1,29 +1,60 @@
-import Dropbox = require("dropbox");
-import fs = require("fs");
+import { writeFile } from "fs";
+import * as request from "request-promise-native";
 import config from "../config/config";
 
-
-const dbSDK = new Dropbox({ accessToken: config.accessToken });
+const REMOTE_DROPBOX_PATH = "/tasklist.csv";
+const LOCAL_CSV_FILE_PATH = "tasklist.csv";
 
 /**
- * Downloads a file with the given path
+ * Downloads a file with the given path from the dropbox api
  * 
  * @param {string} path 
  * @returns {Promise<DropboxTypes.files.FileMetadata>} 
  */
-const downloadFile = async (path: string): Promise<DropboxTypes.files.FileMetadata> => {
-    return await dbSDK.filesDownload({ path });
+const dropboxApiFileDownload = async (path: string) => {
+
+    // Api request url
+    const uri = "https://content.dropboxapi.com/2/files/download";
+
+    // Create the args json object
+    const args = JSON.stringify({ path });
+
+    // Header params
+    const headers = {
+        "Authorization": `Bearer ${config.accessToken}`,
+        "Dropbox-API-Arg": args
+    };
+
+    const requestOpts = {
+        uri,
+        method: "POST",
+        headers,
+        simple: false,
+    };
+
+    return await request(requestOpts);
 };
 
 /**
- * Takes the content from dropbox api call and writes to disk
+ * Takes binary content and writes to file on disk
  * 
  * @param {string} content 
  */
 const writeFileToDisk = (content: string): void => {
-    return fs.writeFile("tasklist.csv", content, (err) => { throw err.message });  
+    // Attempt to write incoming content to disk
+    return writeFile(LOCAL_CSV_FILE_PATH, content, (err) => {
+        // Failed to write to disk
+        if (err) {
+            // If error object exists throw legible error message
+            throw new Error(`Failed to write file to disk with error code: ${err.code}`);
+        }
+    });
 };
 
-const file = downloadFile("/tasklist.csv");
+const main = async () => {
+    const file = await dropboxApiFileDownload(REMOTE_DROPBOX_PATH);
+    await writeFileToDisk(file.fileBinary)
+};
 
+main();
 

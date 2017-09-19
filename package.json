@@ -5,11 +5,18 @@
   "author": "Jarvis Prestidge & Ryan Taylor",
   "license": "MIT",
   "dependencies": {
+    "request": "^2.81.0",
+    "request-promise-native": "^1.0.4"
   },
   "scripts": {
     "prepublishOnly": "npm run build",
     "clean": "rm -rf dist",
     "build": "npm run clean && tsc -p .",
     "start": "node dist/src/index.js"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.28",
+    "@types/request": "^2.0.3",
+    "@types/request-promise-native": "^1.0.6"
   }
 }
