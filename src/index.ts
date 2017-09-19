@@ -3,7 +3,7 @@ import * as request from "request-promise-native";
 import config from "../config/config";
 
 const REMOTE_DROPBOX_PATH = "/tasklist.csv";
-const LOCAL_CSV_FILE_PATH = "tasklist.csv";
+const LOCAL_CSV_FILE_PATH = "../../tasklist.csv";
 
 /**
  * Downloads a file with the given path from the dropbox api
@@ -11,7 +11,7 @@ const LOCAL_CSV_FILE_PATH = "tasklist.csv";
  * @param {string} path 
  * @returns {Promise<DropboxTypes.files.FileMetadata>} 
  */
-const dropboxApiFileDownload = async (path: string) => {
+const dropboxApiFileDownload = async (path: string): Promise<string> => {
 
     // Api request url
     const uri = "https://content.dropboxapi.com/2/files/download";
@@ -36,24 +36,34 @@ const dropboxApiFileDownload = async (path: string) => {
 };
 
 /**
- * Takes binary content and writes to file on disk
+ * Takes string content and writes to file on disk
  * 
  * @param {string} content 
  */
-const writeFileToDisk = (content: string): void => {
-    // Attempt to write incoming content to disk
-    return writeFile(LOCAL_CSV_FILE_PATH, content, (err) => {
-        // Failed to write to disk
+const writeFileToDisk = (path: string, content: string): void => {
+
+    return writeFile(path, content, (err) => {
         if (err) {
             // If error object exists throw legible error message
             throw new Error(`Failed to write file to disk with error code: ${err.code}`);
         }
+        // Else log success
+        console.log('The file has been successfully saved!');
     });
 };
 
-const main = async () => {
-    const file = await dropboxApiFileDownload(REMOTE_DROPBOX_PATH);
-    await writeFileToDisk(file.fileBinary)
+/**
+ * Entry point
+ * 
+ * @returns {Promise<void>} 
+ */
+const main = async (): Promise<void> => {
+
+    // Get file content from api
+    const fileContent = await dropboxApiFileDownload(REMOTE_DROPBOX_PATH);
+
+    // Write content to disk
+    writeFileToDisk(LOCAL_CSV_FILE_PATH, fileContent)
 };
 
 main();
