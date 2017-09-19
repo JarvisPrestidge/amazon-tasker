@@ -70,15 +70,16 @@ const updateCSV = async (): Promise<void> => {
 };
 
 (async () => {
-    // Create Koa instance
-    const app = new Koa();
-    const router = new Router()
-    router.get("/", async (ctx) => ctx.body = ctx.query.challenge);
-    router.post("/", async (ctx) => {
-        console.log("\nRecieved webhook notification - file updated on dropbox!\n")
-        console.log("\n" + JSON.stringify(ctx) + "\n")
-        await updateCSV();
-    });
-    app.use(router.routes());
-    app.listen(4000, () => console.log("\nServer started, listening on port 4000..."));
+    await updateCSV();
+    // // Create Koa instance
+    // const app = new Koa();
+    // const router = new Router()
+    // router.get("/", async (ctx) => ctx.body = ctx.query.challenge);
+    // router.post("/", async (ctx) => {
+    //     console.log("\nRecieved webhook notification - file updated on dropbox!\n")
+    //     console.log("\n" + JSON.stringify(ctx) + "\n")
+    //     await updateCSV();
+    // });
+    // app.use(router.routes());
+    // app.listen(4000, () => console.log("\nServer started, listening on port 4000..."));
 })();
