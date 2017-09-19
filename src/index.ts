@@ -1,25 +1,24 @@
 import { writeFile } from "fs";
 import * as Koa from "koa";
-import * as Body from "koa-body";
 import * as Router from "koa-router";
 import * as Request from "request-promise-native";
 import Config from "../config/config";
 
 const REMOTE_DROPBOX_PATH = "/tasklist.csv";
-const LOCAL_CSV_FILE_PATH = "../../tasklist.csv";
+const LOCAL_CSV_FILE_PATH = "./tasklist.csv";
 
 /**
  * Downloads a file with the given path from the dropbox api
  * 
  * @param {string} path 
- * @returns {Promise<DropboxTypes.files.FileMetadata>} 
+ * @returns {Promise<string>} 
  */
 const dropboxApiFileDownload = async (path: string): Promise<string> => {
 
     // Api request url
     const uri = "https://content.dropboxapi.com/2/files/download";
 
-    // Create the args json object
+    // Create args json object
     const args = JSON.stringify({ path });
 
     // Header params
@@ -41,7 +40,9 @@ const dropboxApiFileDownload = async (path: string): Promise<string> => {
 /**
  * Takes string content and writes to file on disk
  * 
+ * @param {string} path 
  * @param {string} content 
+ * @returns {void} 
  */
 const writeFileToDisk = (path: string, content: string): void => {
 
@@ -69,17 +70,22 @@ const updateCSV = async (): Promise<void> => {
     writeFileToDisk(LOCAL_CSV_FILE_PATH, fileContent)
 };
 
-(async () => {
-    await updateCSV();
-    // // Create Koa instance
-    // const app = new Koa();
-    // const router = new Router()
-    // router.get("/", async (ctx) => ctx.body = ctx.query.challenge);
-    // router.post("/", async (ctx) => {
-    //     console.log("\nRecieved webhook notification - file updated on dropbox!\n")
-    //     console.log("\n" + JSON.stringify(ctx) + "\n")
-    //     await updateCSV();
-    // });
-    // app.use(router.routes());
-    // app.listen(4000, () => console.log("\nServer started, listening on port 4000..."));
-})();
+/**
+ * Setup server to listen for web-hook notifications
+ */
+const initServer = () => {
+
+    // Create Koa instance
+    const app = new Koa();
+    const router = new Router()
+
+    // Route for dropbox web-hook challenge
+    router.get("/", async (ctx) => ctx.body = ctx.query.challenge);
+    // Route for dropbox file update
+    router.post("/", async (ctx) => await updateCSV());
+
+    app.use(router.routes());
+    app.listen(4000, () => console.log("\nServer started, listening on port 4000..."));
+};
+
+initServer();
