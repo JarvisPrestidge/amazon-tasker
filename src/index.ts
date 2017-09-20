@@ -1,8 +1,8 @@
-import { writeFile } from "fs";
+import config from "../config/config";
+import * as fs from "fs";
 import * as Koa from "koa";
 import * as Router from "koa-router";
 import * as Request from "request-promise-native";
-import Config from "../config/config";
 
 const REMOTE_DROPBOX_PATH = "/tasklist.csv";
 const LOCAL_CSV_FILE_PATH = "./tasklist.csv";
@@ -10,28 +10,24 @@ const LOCAL_CSV_FILE_PATH = "./tasklist.csv";
 /**
  * Downloads a file with the given path from the dropbox api
  * 
- * @param {string} path 
+ * @param {string} remotePath 
  * @returns {Promise<string>} 
  */
-const dropboxApiFileDownload = async (path: string): Promise<string> => {
+const dropboxApiFileDownload = async (remotePath: string): Promise<string> => {
 
-    // Api request url
     const uri = "https://content.dropboxapi.com/2/files/download";
 
-    // Create args json object
-    const args = JSON.stringify({ path });
+    const args = JSON.stringify({ remotePath });
 
-    // Header params
     const headers = {
-        "Authorization": `Bearer ${Config.accessToken}`,
+        "Authorization": `Bearer ${config.accessToken}`,
         "Dropbox-API-Arg": args
     };
 
-    const requestOpts = {
+    const requestOpts: Request.Options = {
         uri,
         method: "POST",
-        headers,
-        simple: false,
+        headers
     };
 
     return await Request(requestOpts);
@@ -45,15 +41,10 @@ const dropboxApiFileDownload = async (path: string): Promise<string> => {
  * @returns {void} 
  */
 const writeFileToDisk = (path: string, content: string): void => {
-
-    return writeFile(path, content, (err) => {
-        console.log(path);
-        console.log(content);
+    return fs.writeFile(path, content, (err) => {
         if (err) {
-            // If error object exists throw legible error message
-            throw new Error(`Failed to write file to disk with error code: ${err.code}`);
+            throw new Error(`Failed to write file to disk with error message: ${err.message}`);
         }
-        // Else log success
         console.log("The file has been successfully saved!");
     });
 };
@@ -70,22 +61,14 @@ const updateCSV = async (): Promise<void> => {
     writeFileToDisk(LOCAL_CSV_FILE_PATH, fileContent)
 };
 
-/**
- * Setup server to listen for web-hook notifications
- */
-const initServer = () => {
+// Create Koa instance
+const app = new Koa();
+const router = new Router()
 
-    // Create Koa instance
-    const app = new Koa();
-    const router = new Router()
+// "GET" route for dropbox web-hook setup
+router.get("/", async (ctx) => ctx.body = ctx.query.challenge);
+// "POST" route for dropbox web-hook notifications
+router.post("/", async (ctx) => await updateCSV());
 
-    // Route for dropbox web-hook challenge
-    router.get("/", async (ctx) => ctx.body = ctx.query.challenge);
-    // Route for dropbox file update
-    router.post("/", async (ctx) => await updateCSV());
-
-    app.use(router.routes());
-    app.listen(4000, () => console.log("\nServer started, listening on port 4000..."));
-};
-
-initServer();
+app.use(router.routes());
+app.listen(4000, () => console.log("\nServer started, listening on port 4000..."));

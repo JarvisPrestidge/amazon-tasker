@@ -5,13 +5,7 @@ node_modules
 dist
 
 # Private secrets
-config
-
-# vs code config
-.vscode
-
-# any .task todo files
-**/*.tasks
+config/*.ts
 
 # .cache directories
 **/*.cache
