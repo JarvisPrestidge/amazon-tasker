@@ -4,32 +4,28 @@ import * as Koa from "koa";
 import * as Router from "koa-router";
 import * as Request from "request-promise-native";
 
-const REMOTE_DROPBOX_PATH = "/tasklist.csv";
-const LOCAL_CSV_FILE_PATH = "./tasklist.csv";
-
 /**
- * Downloads a file with the given path from the dropbox api
+ * Download a file with the given path from the dropbox api
  * 
  * @param {string} remotePath 
- * @returns {Promise<string>} 
  */
 const dropboxApiFileDownload = async (remotePath: string): Promise<string> => {
-
-    const uri = "https://content.dropboxapi.com/2/files/download";
 
     const args = JSON.stringify({ remotePath });
 
     const headers = {
-        "Authorization": `Bearer ${config.accessToken}`,
+        "Authorization": `Bearer ${config.ACCESS_TOKEN}`,
         "Dropbox-API-Arg": args
     };
 
     const requestOpts: Request.Options = {
-        uri,
+        uri: "https://content.dropboxapi.com/2/files/download",
         method: "POST",
-        headers
+        headers,
+        simple: false
     };
 
+    // Fire request
     return await Request(requestOpts);
 };
 
@@ -38,9 +34,9 @@ const dropboxApiFileDownload = async (remotePath: string): Promise<string> => {
  * 
  * @param {string} path 
  * @param {string} content 
- * @returns {void} 
  */
 const writeFileToDisk = (path: string, content: string): void => {
+    // Attempt to write content to file and handle results
     return fs.writeFile(path, content, (err) => {
         if (err) {
             throw new Error(`Failed to write file to disk with error message: ${err.message}`);
@@ -51,23 +47,22 @@ const writeFileToDisk = (path: string, content: string): void => {
 
 /**
  * Update local copy of csv file with remote
- * 
- * @returns {Promise<void>} 
  */
 const updateCSV = async (): Promise<void> => {
-    // Get file content from api
-    const fileContent = await dropboxApiFileDownload(REMOTE_DROPBOX_PATH);
-    // Write content to disk
-    writeFileToDisk(LOCAL_CSV_FILE_PATH, fileContent)
+    const fileContent = await dropboxApiFileDownload(config.REMOTE_DROPBOX_FILE_PATH);
+    if (!fileContent) {
+        
+    }
+
+    writeFileToDisk(config.LOCAL_SAVE_FILE_PATH, fileContent)
 };
 
-// Create Koa instance
+// Setup koa webserver
 const app = new Koa();
 const router = new Router()
 
-// "GET" route for dropbox web-hook setup
+// Configure routes
 router.get("/", async (ctx) => ctx.body = ctx.query.challenge);
-// "POST" route for dropbox web-hook notifications
 router.post("/", async (ctx) => await updateCSV());
 
 app.use(router.routes());

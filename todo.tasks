@@ -3,5 +3,7 @@
 ☐ Investigate using docker image
 ☐ Inverstigate using PM2 / upstart
 ☐ Inverstigate using NGork
+☐ Add email notificaton on error via nodemailer
+☐ Split out network and filesystem utlities into distinct files
 
 
