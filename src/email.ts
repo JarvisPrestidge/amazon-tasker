@@ -1,4 +1,5 @@
 import { gmail } from "../config/config";
+import { runtime } from "./env";
 import * as fs from "fs";
 import * as nodemailer from "nodemailer";
 
@@ -30,11 +31,12 @@ const mailOptions: nodemailer.SendMailOptions = {
  * @param {string} [text] 
  */
 export const sendEmailAlert = (template: string, subject?: string): void => {
-    // Read html template
-    mailOptions.html = fs.readFileSync(`./templates/${template}.html`, "utf8");
     // Conditionally edit subject
     if (subject) mailOptions.subject = subject;
-    // Send and log mail
+    // Read html template
+    const templatePath = `${runtime.__templates}/${template}.html`;
+    mailOptions.html = fs.readFileSync(templatePath, "utf8");
+    // Send and log email
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.log(error);

@@ -2,9 +2,14 @@
 ☐ Polling metadata approach @today 
 ☐ Investigate using docker image
 ☐ Inverstigate using PM2 / upstart
-☐ Inverstigate using NGork
+
+✔ Inverstigate using NGork: @done (2017-9-21 14:59:07)
+    ☐ Need to buy paid account (ryan)
+
 ✔ Add email notificaton on error via nodemailer @done (2017-9-21 12:49:10)
-    ☐ Add hmtl message with inline css
+    ✔ Add hmtl message with inline css @done (2017-9-21 14:58:33)
+    ☐ Need to work on templates
+
 ☐ Split out network and filesystem utlities into distinct files
 
 

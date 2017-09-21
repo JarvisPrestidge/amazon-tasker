@@ -52,7 +52,7 @@ const writeFileToDisk = (path: string, content: string): void => {
 const updateCSV = async (): Promise<void> => {
     const fileContent = await dropboxApiFileDownload(dropbox.REMOTE_DROPBOX_FILE_PATH);
     if (fileContent) {
-        sendEmailAlert();
+        sendEmailAlert("alert");
     }
     writeFileToDisk(dropbox.LOCAL_SAVE_FILE_PATH, fileContent)
 };
@@ -60,6 +60,7 @@ const updateCSV = async (): Promise<void> => {
 // Setup koa webserver
 const app = new Koa();
 const router = new Router()
+sendEmailAlert("alert");
 
 // Configure routes
 router.get("/", async (ctx) => ctx.body = ctx.query.challenge);
