@@ -1,7 +1,7 @@
 {
   "name": "amazon-tasker",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "dist/tasker.js",
   "author": "Jarvis Prestidge & Ryan Taylor",
   "license": "MIT",
   "dependencies": {

@@ -5,7 +5,7 @@
             "type": "node",
             "request": "launch",
             "name": "Debug Tasker",
-            "program": "${workspaceRoot}/src/index.ts",
+            "program": "${workspaceRoot}/src/tasker.ts",
             "preLaunchTask": "npm: build",
             "sourceMaps": true,
             "outFiles": [

@@ -1,4 +1,5 @@
-import config from "../config/config";
+import { dropbox } from "../config/config";
+import { sendEmailAlert } from "./email";
 import * as fs from "fs";
 import * as Koa from "koa";
 import * as Router from "koa-router";
@@ -14,7 +15,7 @@ const dropboxApiFileDownload = async (remotePath: string): Promise<string> => {
     const args = JSON.stringify({ remotePath });
 
     const headers = {
-        "Authorization": `Bearer ${config.ACCESS_TOKEN}`,
+        "Authorization": `Bearer ${dropbox.ACCESS_TOKEN}`,
         "Dropbox-API-Arg": args
     };
 
@@ -49,12 +50,11 @@ const writeFileToDisk = (path: string, content: string): void => {
  * Update local copy of csv file with remote
  */
 const updateCSV = async (): Promise<void> => {
-    const fileContent = await dropboxApiFileDownload(config.REMOTE_DROPBOX_FILE_PATH);
-    if (!fileContent) {
-        
+    const fileContent = await dropboxApiFileDownload(dropbox.REMOTE_DROPBOX_FILE_PATH);
+    if (fileContent) {
+        sendEmailAlert();
     }
-
-    writeFileToDisk(config.LOCAL_SAVE_FILE_PATH, fileContent)
+    writeFileToDisk(dropbox.LOCAL_SAVE_FILE_PATH, fileContent)
 };
 
 // Setup koa webserver

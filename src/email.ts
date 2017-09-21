@@ -1,14 +1,18 @@
-import config from "../config/config";
+import { gmail } from "../config/config";
 import * as nodemailer from "nodemailer";
 
-const smtpTransport = nodemailer.createTransport("SMTP", {
+const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
     secure: true,
     auth: {
         type: "OAuth2",
-        user: "jarvisprestidge@gmail.com",
-        accessToken: config.ACCESS_TOKEN
+        user: gmail.USER,
+        clientId: gmail.CLIENT_ID,
+        clientSecret: gmail.CLIENT_SECRET,
+        refreshToken: gmail.REFRESH_TOKEN,
+        accessToken: gmail.ACCESS_TOKEN,
+        expires: 3600
     }
 });
 
@@ -16,7 +20,7 @@ const mailOptions = {
     from: "Tasker - Raspbery Pi @ Amazon",
     to: "jarvisprestidge@gmail.com",
     subject: "Tasker Status Alert",
-    text: 
+    text:
     `
     Hello master,
 
@@ -31,9 +35,23 @@ const mailOptions = {
     `
 }
 
-smtpTransport.sendMail(mailOptions, (error, info) => {
-    if (error) {
-        console.log(error);
+/**
+ * Send alert email
+ * 
+ * @param {string} [subject] 
+ * @param {string} [text] 
+ */
+export const sendEmailAlert = (subject?: string, text?: string): void => {
+    if (subject) {
+        mailOptions.subject = subject;
     }
-    console.log("Message sent: " + info.messageId);
-});
+    if (text) {
+        mailOptions.text = text;
+    }
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log(error);
+        }
+        console.log("Message sent: " + info.messageId);
+    });
+}
