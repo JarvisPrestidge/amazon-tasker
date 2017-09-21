@@ -1,4 +1,5 @@
 import { gmail } from "../config/config";
+import * as fs from "fs";
 import * as nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
@@ -16,23 +17,10 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const mailOptions = {
+const mailOptions: nodemailer.SendMailOptions = {
     from: "Tasker - Raspbery Pi @ Amazon",
     to: "jarvisprestidge@gmail.com",
-    subject: "Tasker Status Alert",
-    text:
-    `
-    Hello master,
-
-    ** Unable to fetch document from dropbox storage. **
-
-    You may have changed the file name from tasklist.csv or changed the folder structure.
-
-    This was an automated message... Beep Boop.
-
-    Sincerely,
-    Tasker
-    `
+    subject: "Tasker Status Alert"
 }
 
 /**
@@ -41,13 +29,12 @@ const mailOptions = {
  * @param {string} [subject] 
  * @param {string} [text] 
  */
-export const sendEmailAlert = (subject?: string, text?: string): void => {
-    if (subject) {
-        mailOptions.subject = subject;
-    }
-    if (text) {
-        mailOptions.text = text;
-    }
+export const sendEmailAlert = (template: string, subject?: string): void => {
+    // Read html template
+    mailOptions.html = fs.readFileSync(`./templates/${template}.html`, "utf8");
+    // Conditionally edit subject
+    if (subject) mailOptions.subject = subject;
+    // Send and log mail
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.log(error);

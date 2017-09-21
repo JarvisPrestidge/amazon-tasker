@@ -3,7 +3,8 @@
 ☐ Investigate using docker image
 ☐ Inverstigate using PM2 / upstart
 ☐ Inverstigate using NGork
-☐ Add email notificaton on error via nodemailer
+✔ Add email notificaton on error via nodemailer @done (2017-9-21 12:49:10)
+    ☐ Add hmtl message with inline css
 ☐ Split out network and filesystem utlities into distinct files
 
 
