@@ -4,8 +4,7 @@ site-layout
         div#content
             div#form-wrapper
                 h1.my-5 -- Waiting for scan...
-                form id="maskForm" action="/badgeid" method="POST"
-                    input type="text" name="scan_code"
+                input type="text" id="mask_form"
                     
 
 style {
@@ -16,9 +15,40 @@ style {
         height: 100vh;
     }
 
+    input {
+        height: 100vh;
+        width: 100vw;
+    }
+
     #form-wrapper {
         position: absolute;
         width: 100vw;
         top: 50%;
     }
 }
+
+<!-- const maskInput = document.getElementById("MaskInput");
+
+maskInput.style.opacity = 0;
+maskInput.focus();
+
+maskInput.onkeyup = (event) => {
+	if(event.keyCode === 13){
+  	const scanCode = event.target.value;
+    alert(scanCode);
+    console.log(postScanCode(scanCode));
+	}
+}
+
+const postScanCode = async (scanCode) => {
+	// Create FormData instance
+	const formData = new FormData();
+  // Append scanCode as key / value pair
+  formData.append("scanCode", scanCode);
+  // Post scanCode to badgeid endpoint
+  const response = await fetch("/badgeid", {
+  	method: "POST",
+  	body: formData
+	});
+  return repsonse;
+}; -->
