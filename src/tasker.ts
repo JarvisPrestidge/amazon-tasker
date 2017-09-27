@@ -1,70 +1,18 @@
-import { dropbox } from "../config/config";
-import { sendEmailAlert } from "./email";
-import * as fs from "fs";
+import * as opn from "opn";
 import * as Koa from "koa";
-import * as Router from "koa-router";
-import * as Request from "request-promise-native";
+import * as serve from "koa-static";
+import api from "./routes";
 
-/**
- * Download a file with the given path from the dropbox api
- * 
- * @param {string} remotePath 
- */
-const dropboxApiFileDownload = async (remotePath: string): Promise<string> => {
 
-    const args = JSON.stringify({ remotePath });
-
-    const headers = {
-        "Authorization": `Bearer ${dropbox.ACCESS_TOKEN}`,
-        "Dropbox-API-Arg": args
-    };
-
-    const requestOpts: Request.Options = {
-        uri: "https://content.dropboxapi.com/2/files/download",
-        method: "POST",
-        headers,
-        simple: false
-    };
-
-    // Fire request
-    return await Request(requestOpts);
-};
-
-/**
- * Takes string content and writes to file on disk
- * 
- * @param {string} path 
- * @param {string} content 
- */
-const writeFileToDisk = (path: string, content: string): void => {
-    // Attempt to write content to file and handle results
-    return fs.writeFile(path, content, (err) => {
-        if (err) {
-            throw new Error(`Failed to write file to disk with error message: ${err.message}`);
-        }
-        console.log("The file has been successfully saved!");
-    });
-};
-
-/**
- * Update local copy of csv file with remote
- */
-const updateCSV = async (): Promise<void> => {
-    const fileContent = await dropboxApiFileDownload(dropbox.REMOTE_DROPBOX_FILE_PATH);
-    if (fileContent) {
-        sendEmailAlert("alert");
-    }
-    writeFileToDisk(dropbox.LOCAL_SAVE_FILE_PATH, fileContent)
-};
+// Launches chrome
+opn('http://localhost:4000/tasker', {app: "google-chrome"});
 
 // Setup koa webserver
 const app = new Koa();
-const router = new Router()
-sendEmailAlert("alert");
 
-// Configure routes
-router.get("/", async (ctx) => ctx.body = ctx.query.challenge);
-router.post("/", async (ctx) => await updateCSV());
+// Serve the contents of the static folder
+app.use(serve(__dirname + "/static"));
 
-app.use(router.routes());
+// Get routes and serve
+app.use(api.routes());
 app.listen(4000, () => console.log("\nServer started, listening on port 4000..."));

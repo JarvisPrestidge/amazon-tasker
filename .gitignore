@@ -1,8 +1,17 @@
 # Dependency directories
 node_modules
 
-# Custom
+# Transpiled js
 dist
+
+# Static assets
+static
+
+# Static assets
+.cache
+
+# Supporting binaries
+bin/*
 
 # Private secrets
 config/*.ts
