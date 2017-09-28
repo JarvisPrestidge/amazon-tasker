@@ -1,0 +1,39 @@
+class {
+
+    onMount() {
+        console.log(this.el)
+        this.el.focus();
+        this.el.style.opacity = 0;
+        console.log("onMount fired")
+    }
+    
+    // Attribute event listener
+    keydown(event) {
+        if (event.keyCode === 13) {
+            console.log("Enter pressed")
+            const scanCode = event.target.value;
+            console.log(scanCode)
+            this.postScanCode(scanCode);
+        }
+    }
+
+    // Post utility function
+    postScanCode(scanCode) {
+        console.log("postScanCode fired")
+        // Post scanCode to badgeid endpoint
+        fetch("/badgeid", {
+            method: "POST",
+            body: scanCode
+        });
+    }
+}             
+
+
+style {
+    #mask-input {
+        height: 100vh;
+        width: 100vw;
+    }
+}
+
+input id="mask-input" type="text" on-keydown('keydown')

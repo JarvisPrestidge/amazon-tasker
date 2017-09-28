@@ -28,7 +28,13 @@ function render(input, out) {
 
   component_globals_tag({}, out);
 
-  out.w("<div class=\"jumbotron-fluid\" id=\"header\"><h1 class=\"display-1 font-weight-bold\">(input.title)</h1><p class=\"my-3\">Automatic task delegation</p></div>");
+  out.w("<div class=\"jumbotron-fluid\" id=\"header\"><h1 class=\"display-1 font-weight-bold\">");
+
+  include_tag({
+      _target: input.title
+    }, out);
+
+  out.w("</h1><p class=\"my-3\">Automatic task delegation</p></div>");
 
   include_tag({
       _target: input.body
