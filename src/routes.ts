@@ -1,4 +1,5 @@
-import { updateCSV } from "./utils";
+import { updateCSV, getTaskFromCSV } from "./utils/csv";
+import { dropbox } from "../config/config";
 import { runtime } from "./env";
 import { Context } from "koa";
 import * as Body from "koa-body";
@@ -13,13 +14,11 @@ const body = Body()
 
 // Require page templates
 const index = require(`${runtime.__routes}/index`);
-// const index = require("../../routes/index");
 
 // Back-end
 router
     .get("/", dropboxChallengeHandler)
     .post("/", body, dropboxWebHookHandler);
-
 
 // Front-end
 router    
@@ -30,6 +29,7 @@ export default router;
 
 async function dropboxChallengeHandler(ctx: Context) {
     // Echo back the dropbox challenge
+    ctx.type = "text/html";
     ctx.body = ctx.query.challenge;
     console.log("Receieved dropbox challenge / repsonse")
 };
@@ -46,6 +46,8 @@ async function indexHandler(ctx: Context) {
 };
 
 async function scanHandler(ctx: Context) {
-    const scanCode = ctx.request.body;
+    const scanCode: string = ctx.request.body;
     console.log("Scan code: ", scanCode);
+    ctx.type = "text/html";
+    ctx.body = await getTaskFromCSV(dropbox.LOCAL_SAVE_FILE_PATH, scanCode)
 };
