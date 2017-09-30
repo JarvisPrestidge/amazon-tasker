@@ -57,12 +57,6 @@ marko_template.Component = marko_defineComponent(marko_component, marko_template
 marko_template.meta = {
     deps: [
       {
-          type: "css",
-          code: "#mask-input {\n        height: 100vh;\n        width: 100vw;\n    }",
-          virtualPath: "./index.marko.css",
-          path: "./index.marko"
-        },
-      {
           type: "require",
           path: "./"
         }
