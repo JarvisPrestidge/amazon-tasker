@@ -6,7 +6,9 @@
   "license": "MIT",
   "scripts": {
     "prepublishOnly": "npm run build",
-    "clean": "rm -rf dist static .cache '**/*.marko.js'",
+    "clean": "npm run clean-build && npm run clean-marko",
+    "clean-build": "rm -rf dist static .cache",
+    "clean-marko": "find . -type f -name '*.marko.js' -delete",
     "build": "npm run clean && tsc -p .",
     "start": "node dist/src/index.js"
   },
