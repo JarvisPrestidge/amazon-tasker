@@ -1,0 +1,30 @@
+static {
+    const defaultTaskMessage = "Waiting for scan...";
+    const defaultTaskTimeout = 5000;
+}
+
+class {
+    onCreate() {
+        this.state = {
+            task: defaultTaskMessage
+        };
+    }
+
+    onTask(task) {
+        this.state.task = task;
+        setTimeout(() => this.state.task = defaultTaskMessage, defaultTaskTimeout);
+    }
+}
+
+style {
+    #content {
+        background-color: #eceeef;
+        text-align: center;
+        height: 100vh;
+    }
+}
+
+div#content
+    h1.my-5 -- ${state.task}
+    tasker-input on-task("onTask")
+

@@ -1,0 +1,21 @@
+? (192.168.197.91) at 30:a9:de:0e:cc:a0 [ether] on wlp58s0
+? (192.168.199.57) at 30:a9:de:94:a0:d0 [ether] on wlp58s0
+? (192.168.198.166) at e8:f2:e2:cb:34:58 [ether] on wlp58s0
+? (192.168.199.68) at 30:a9:de:94:a0:28 [ether] on wlp58s0
+? (192.168.197.83) at 30:a9:de:2e:ec:4c [ether] on wlp58s0
+? (192.168.198.39) at 30:a9:de:94:a1:d8 [ether] on wlp58s0
+? (192.168.197.80) at 30:a9:de:2e:ec:20 [ether] on wlp58s0
+? (192.168.197.233) at 30:a9:de:94:a0:06 [ether] on wlp58s0
+? (192.168.198.121) at 90:97:f3:58:d2:8a [ether] on wlp58s0
+? (192.168.197.82) at 30:a9:de:0e:cc:96 [ether] on wlp58s0
+? (192.168.196.1) at 4c:5e:0c:14:b9:c4 [ether] on wlp58s0
+? (192.168.199.124) at 30:a9:de:2e:eb:fe [ether] on wlp58s0
+? (192.168.199.97) at 30:a9:de:94:a1:42 [ether] on wlp58s0
+? (192.168.199.63) at 30:a9:de:0e:be:6e [ether] on wlp58s0
+? (192.168.197.166) at 30:a9:de:94:a1:84 [ether] on wlp58s0
+? (192.168.198.214) at 30:a9:de:94:a1:52 [ether] on wlp58s0
+? (192.168.198.111) at 30:a9:de:94:a1:6a [ether] on wlp58s0
+? (192.168.199.121) at 30:a9:de:94:a1:5e [ether] on wlp58s0
+? (192.168.198.87) at 30:a9:de:94:a1:74 [ether] on wlp58s0
+? (192.168.199.33) at b4:e6:2a:44:32:ce [ether] on wlp58s0
+

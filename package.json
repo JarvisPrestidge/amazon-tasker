@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "prepublishOnly": "npm run build",
-    "clean": "rm -rf dist static .cache",
+    "clean": "rm -rf dist static .cache '**/*.marko.js'",
     "build": "npm run clean && tsc -p .",
     "start": "node dist/src/index.js"
   },
@@ -19,7 +19,7 @@
     "koa-static": "^4.0.1",
     "lasso": "^2.11.16",
     "lasso-marko": "^2.3.0",
-    "marko": "^4.4.28",
+    "marko": "^4.5.0-beta.4",
     "nodemailer": "^4.1.0",
     "opn": "^5.1.0",
     "request": "^2.81.0",

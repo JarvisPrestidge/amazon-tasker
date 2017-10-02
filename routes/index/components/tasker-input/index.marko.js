@@ -1,4 +1,4 @@
-// Compiled using marko@4.4.28 - DO NOT EDIT
+// Compiled using marko@4.5.0-beta.4 - DO NOT EDIT
 "use strict";
 
 var marko_template = module.exports = require("marko/src/html").t(__filename),
@@ -13,21 +13,25 @@ var marko_template = module.exports = require("marko/src/html").t(__filename),
         if (event.keyCode === 13) {
             console.log('Enter pressed');
             const scanCode = event.target.value;
+            event.target.value = '';
             console.log(scanCode);
-            this.postScanCode(scanCode);
+            this.fetchTask(scanCode);
         }
     },
-    postScanCode: function (scanCode) {
-        console.log('postScanCode fired');
-        fetch('/badgeid', {
+    fetchTask: async function (scanCode) {
+        console.log('fetchTask fired');
+        const response = await fetch('/badgeid', {
             method: 'POST',
             body: scanCode
         });
+        const task = await response.text();
+        console.log(task);
+        this.emit('task', task);
     }
 }),
     components_helpers = require("marko/src/components/helpers"),
     marko_registerComponent = components_helpers.rc,
-    marko_componentType = marko_registerComponent("/amazon-tasker$1.0.0/routes/index/components/input-form/index.marko", function() {
+    marko_componentType = marko_registerComponent("/amazon-tasker$1.0.0/routes/index/components/tasker-input/index.marko", function() {
       return module.exports;
     }),
     marko_renderer = components_helpers.r,
@@ -38,9 +42,7 @@ var marko_template = module.exports = require("marko/src/html").t(__filename),
 function render(input, out, __component, component, state) {
   var data = input;
 
-  out.w("<input" +
-    marko_attr("id", __component.id) +
-    " type=\"text\"" +
+  out.w("<input id=\"mask-input\" type=\"text\"" +
     marko_attr("data-marko", {
       onkeydown: __component.d("keydown")
     }, false) +
@@ -48,8 +50,7 @@ function render(input, out, __component, component, state) {
 }
 
 marko_template._ = marko_renderer(render, {
-    type: marko_componentType,
-    id: "mask-input"
+    ___type: marko_componentType
   }, marko_component);
 
 marko_template.Component = marko_defineComponent(marko_component, marko_template._);
