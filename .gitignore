@@ -10,6 +10,9 @@ static
 # Static assets
 .cache
 
+# Marko compiled files
+**/*.marko.js
+
 # Supporting binaries
 bin/*
 
