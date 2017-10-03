@@ -1,6 +1,5 @@
 import { updateCSV, getTaskFromCSV } from "./utils/csv";
-import { dropbox } from "../config/config";
-import { runtime } from "./env";
+import { dropbox } from "./config/config";
 import { Context } from "koa";
 import * as Body from "koa-body";
 import * as Router from "koa-router";
@@ -13,7 +12,7 @@ const router = new Router()
 const body = Body()
 
 // Require page templates
-const index = require(`${runtime.__routes}/index`);
+const index = require("./routes/index");
 
 // Back-end
 router

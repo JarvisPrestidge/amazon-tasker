@@ -1,4 +1,4 @@
-import { gmail } from "../../config/config";
+import { gmail } from "../config/config";
 import { runtime } from "./../env";
 import * as fs from "fs";
 import * as nodemailer from "nodemailer";
