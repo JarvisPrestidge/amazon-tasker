@@ -1,19 +1,33 @@
-import { sendEmailAlert } from "./email";
-import { dropbox } from "../config/config";
-import { dropboxApiFileDownload } from "./network";
 const csvParse = require("csv-parse/lib/sync");
+import { dropboxApiFileDownload, Shift } from "./network";
+import { sendEmailAlert } from "./email";
+import env from "./../env";
+import * as moment from "moment";
 import * as fs from "fs";
 
 /**
  * Update local copy of csv file with remote
  */
 export const updateCSV = async (): Promise<void> => {
-    const fileContent = await dropboxApiFileDownload(dropbox.REMOTE_DROPBOX_FILE_PATH);
-    if (fileContent) {
+    const shift = getShift();
+    const fileContent = await dropboxApiFileDownload(shift);
+    if (!fileContent) {
         sendEmailAlert("alert");
     }
-    writeFileToDisk(dropbox.LOCAL_SAVE_FILE_PATH, fileContent)
+    writeFileToDisk(env.__csvDay, fileContent)
 };
+
+/**
+ * If we're currently between the hours of 6am - 6pm then return day else night
+ * 
+ * @returns {Shift} 
+ */
+const getShift = (): Shift => {
+    return moment().isBetween(moment({hour: 6}), moment({hour: 18}))
+        ? "DAY"
+        : "NIGHT";
+};
+
 
 /**
  * Data type representing a single row of csv

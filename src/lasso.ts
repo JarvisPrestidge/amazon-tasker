@@ -1,4 +1,4 @@
-import { runtime } from "./env";
+import env from "./env";
 
 // Required for Marko
 require("marko/node-require");
@@ -8,6 +8,6 @@ require("lasso").configure({
     plugins: [
         require("lasso-marko")
     ],
-    outputDir: runtime.__static,
+    outputDir: env.__static,
     urlPrefix: "./",
 });

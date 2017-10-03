@@ -1,8 +1,8 @@
-import { runtime } from "./env";
+import api from "./routes";
+import env from "./env";
 import * as opn from "opn";
 import * as Koa from "koa";
 import * as serve from "koa-static";
-import api from "./routes";
 
 
 // Launches chrome
@@ -14,7 +14,7 @@ const app = new Koa();
 console.log(__dirname);
 
 // Serve the contents of the static folder
-app.use(serve(runtime.__static));
+app.use(serve(env.__static));
 // TODO: try to use lasso server middleware
 // app.use(require("lasso/middleware/koa/serveStatic"));
 

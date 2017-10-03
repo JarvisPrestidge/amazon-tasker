@@ -1,17 +1,23 @@
-import { dropbox } from "../config/config";
+import config from "../config/config";
 import * as Request from "request-promise-native";
+
+export type Shift = "DAY" | "NIGHT";
 
 /**
  * Download a file with the given path from the dropbox api
  * 
  * @param {string} remotePath 
  */
-export const dropboxApiFileDownload = async (path: string): Promise<string> => {
+export const dropboxApiFileDownload = async (shift: Shift): Promise<string> => {
+
+    const path = shift === "DAY"
+        ? config.dropbox.REMOTE_FILE_PATH_DAY
+        : config.dropbox.REMOTE_FILE_PATH_DAY;
 
     const args = JSON.stringify({ path });
 
     const headers = {
-        "Authorization": `Bearer ${dropbox.ACCESS_TOKEN}`,
+        "Authorization": `Bearer ${config.dropbox.ACCESS_TOKEN}`,
         "Dropbox-API-Arg": args
     };
 
