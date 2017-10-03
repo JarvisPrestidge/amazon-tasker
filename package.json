@@ -6,16 +6,13 @@
   "license": "MIT",
   "scripts": {
     "prepublishOnly": "npm run build",
-    "clean": "npm run clean-build && npm run clean-marko",
-    "clean-build": "rm -rf dist static .cache",
-    "clean-marko": "find . -type f -name '*.marko.js' -delete",
+    "clean": "rm -rf dist static .cache && find . -type f -name '*.marko.js' -delete",
     "build": "npm run clean && tsc -p . && npm run copy-static-files",
     "copy-static-files": "cp -R src/routes src/templates dist",
-    "start": "node dist/src/index.js"
+    "start": "node dist/start.js"
   },
   "dependencies": {
     "csv-parse": "^1.2.3",
-    "dts-gen": "^0.5.6",
     "koa": "^2.3.0",
     "koa-body": "^2.4.0",
     "koa-router": "^7.2.1",
@@ -38,7 +35,6 @@
     "@types/opn": "^3.0.28",
     "@types/request": "^2.0.3",
     "@types/request-promise-native": "^1.0.6",
-    "copyfiles": "^1.2.0",
     "tslint": "^5.7.0",
     "typescript": "^2.5.2"
   }

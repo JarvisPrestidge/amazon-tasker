@@ -6,14 +6,23 @@ static {
 class {
     onCreate() {
         this.state = {
-            task: defaultTaskMessage
+            task: defaultTaskMessage,
+            timer: null
         };
     }
 
     onTask(task) {
+        console.log(this.state)
+        // Clear old timer
+        if (this.state.timer != null) {
+            clearTimeout(this.state.timer);
+        }
+        // Set task to new value
         this.state.task = task;
-        setTimeout(() => this.state.task = defaultTaskMessage, defaultTaskTimeout);
-        //TODO: handle repeated quick input
+        // Create new timer
+        this.state.timer = setTimeout(() => {
+            this.state.task = defaultTaskMessage;
+         }, defaultTaskTimeout);
     }
 }
 
