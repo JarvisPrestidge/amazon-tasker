@@ -1,5 +1,5 @@
 import { sendEmailAlert } from "./email";
-import { dropbox } from "../../config/config";
+import { dropbox } from "../config/config";
 import { dropboxApiFileDownload } from "./network";
 const csvParse = require("csv-parse/lib/sync");
 import * as fs from "fs";

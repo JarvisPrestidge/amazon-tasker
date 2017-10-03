@@ -1,4 +1,4 @@
-import { dropbox } from "../../config/config";
+import { dropbox } from "../config/config";
 import * as Request from "request-promise-native";
 
 /**

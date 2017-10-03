@@ -13,6 +13,7 @@ class {
     onTask(task) {
         this.state.task = task;
         setTimeout(() => this.state.task = defaultTaskMessage, defaultTaskTimeout);
+        //TODO: handle repeated quick input
     }
 }
 

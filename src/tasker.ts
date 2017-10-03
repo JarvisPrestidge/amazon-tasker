@@ -11,6 +11,8 @@ opn('http://localhost:4000/tasker', {app: "google-chrome"});
 // Setup koa webserver
 const app = new Koa();
 
+console.log(__dirname);
+
 // Serve the contents of the static folder
 app.use(serve(runtime.__static));
 // TODO: try to use lasso server middleware

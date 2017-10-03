@@ -9,7 +9,8 @@
     "clean": "npm run clean-build && npm run clean-marko",
     "clean-build": "rm -rf dist static .cache",
     "clean-marko": "find . -type f -name '*.marko.js' -delete",
-    "build": "npm run clean && tsc -p .",
+    "build": "npm run clean && tsc -p . && npm run copy-static-files",
+    "copy-static-files": "cp -R src/routes src/templates dist",
     "start": "node dist/src/index.js"
   },
   "dependencies": {
