@@ -1,33 +1,31 @@
 const csvParse = require("csv-parse/lib/sync");
-import { dropboxApiFileDownload, Shift } from "./network";
+import { dropboxApiFileDownload } from "./network";
 import { sendEmailAlert } from "./email";
+import { getShift } from "./time";
+import config from "../config/config";
 import env from "./../env";
-import * as moment from "moment";
 import * as fs from "fs";
 
 /**
  * Update local copy of csv file with remote
  */
 export const updateCSV = async (): Promise<void> => {
+
     const shift = getShift();
-    const fileContent = await dropboxApiFileDownload(shift);
+
+    // TODO: get meta-data from csv web-hook post to download 
+    // the correct file
+
+    const path = shift === "DAY"
+        ? config.dropbox.REMOTE_FILE_PATH_DAY
+        : config.dropbox.REMOTE_FILE_PATH_DAY;
+
+    const fileContent = await dropboxApiFileDownload(path);
     if (!fileContent) {
         sendEmailAlert("alert");
     }
-    writeFileToDisk(env.__csvDay, fileContent)
+    writeFileToDisk(env.data.__csvDay, fileContent)
 };
-
-/**
- * If we're currently between the hours of 6am - 6pm then return day else night
- * 
- * @returns {Shift} 
- */
-const getShift = (): Shift => {
-    return moment().isBetween(moment({hour: 6}), moment({hour: 18}))
-        ? "DAY"
-        : "NIGHT";
-};
-
 
 /**
  * Data type representing a single row of csv
@@ -45,7 +43,16 @@ interface IRow {
  * @param {string} scanCode 
  * @returns {Promise<string>} 
  */
-export const getTaskFromCSV = async (path: string, scanCode: string): Promise<string> => {
+export const getTaskFromCSV = async (scanCode: string): Promise<string> => {
+
+    // Get current shift
+    const shift = getShift();
+
+    // Point to relevant file path
+    const path = shift === "DAY"
+        ? env.data.__csvDay
+        : env.data.__csvNight;
+
     return new Promise<string>((resolve, reject) => {
         fs.readFile(path, (err, data) => {
             if (err) {
@@ -54,9 +61,11 @@ export const getTaskFromCSV = async (path: string, scanCode: string): Promise<st
             const rows: IRow[] = csvParse(data, {
                 delimiter: ",",
                 columns: ["badge_id", "task"],
-                from: 2,
+                skip_lines_with_empty_values: true,
+                from: 2
             });
             const row = rows.find((row) => row.badge_id === scanCode);
+            console.log(row);
             if (!row) {
                 return resolve("User not in system");
             }

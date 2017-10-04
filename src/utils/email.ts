@@ -34,7 +34,7 @@ export const sendEmailAlert = (template: string, subject?: string): void => {
     // Conditionally edit subject
     if (subject) mailOptions.subject = subject;
     // Read html template
-    const templatePath = `${env.__templates}/${template}.html`;
+    const templatePath = `${env.project.__templates}/${template}.html`;
     mailOptions.html = fs.readFileSync(templatePath, "utf8");
     // Send and log email
     transporter.sendMail(mailOptions, (error, info) => {

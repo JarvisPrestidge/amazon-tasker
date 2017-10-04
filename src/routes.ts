@@ -1,5 +1,4 @@
 import { updateCSV, getTaskFromCSV } from "./utils/csv";
-import { dropbox } from "./config/config";
 import { Context } from "koa";
 import * as Body from "koa-body";
 import * as Router from "koa-router";
@@ -17,10 +16,7 @@ const index = require("./routes/index");
 // Back-end
 router
     .get("/", dropboxChallengeHandler)
-    .post("/", body, dropboxWebHookHandler);
-
-// Front-end
-router    
+    .post("/", body, dropboxWebHookHandler)
     .get("/tasker", indexHandler)
     .post("/badgeid", body, scanHandler);
 
@@ -34,6 +30,7 @@ async function dropboxChallengeHandler(ctx: Context) {
 };
 
 async function dropboxWebHookHandler() {
+    // TODO: collect meta data from post body and send to updateCSV()
     await updateCSV();
     console.log("Updating csv...");
 };
@@ -48,5 +45,5 @@ async function scanHandler(ctx: Context) {
     const scanCode: string = ctx.request.body;
     console.log("Scan code: ", scanCode);
     ctx.type = "text/html";
-    ctx.body = await getTaskFromCSV(dropbox.LOCAL_SAVE_FILE_PATH, scanCode)
+    ctx.body = await getTaskFromCSV(scanCode)
 };

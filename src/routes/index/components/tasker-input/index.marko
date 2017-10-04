@@ -3,7 +3,6 @@ class {
     onMount() {
         console.log(this.el)
         this.el.focus();
-        this.el.style.opacity = 0;
         console.log("onMount fired")
     }
     
@@ -30,6 +29,12 @@ class {
         const task = await response.text();
         console.log(task)
         this.emit("task", task);
+    }
+}
+
+style {
+    #mask-input {
+        opacity: 0;
     }
 }
 

@@ -8,6 +8,6 @@ require("lasso").configure({
     plugins: [
         require("lasso-marko")
     ],
-    outputDir: env.__static,
+    outputDir: env.project.__static,
     urlPrefix: "./",
 });
