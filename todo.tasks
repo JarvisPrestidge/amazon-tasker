@@ -1,0 +1,12 @@
+Features:
+    ☐ Explore more edge cases, error handling
+    ☐ Parse metadata from dropbox web-hook post for metrics / logging / downloads
+    ☐ Add service to acculumate user metrics
+Testing:
+    ☐ Add tests
+    ☐ Add CI (travis / semaphore / circleci etc.)
+Docker:
+    ☐ Create dockerfile
+    ☐ Test on pi with arm images
+    ☐ Create docker-compose.yml
+    ☐ Research swarm front-end gui

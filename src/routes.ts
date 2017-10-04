@@ -13,14 +13,11 @@ const body = Body()
 // Require page templates
 const index = require("./routes/index");
 
-// Back-end
-router
+export default router
     .get("/", dropboxChallengeHandler)
     .post("/", body, dropboxWebHookHandler)
     .get("/tasker", indexHandler)
     .post("/badgeid", body, scanHandler);
-
-export default router;
 
 async function dropboxChallengeHandler(ctx: Context) {
     // Echo back the dropbox challenge
